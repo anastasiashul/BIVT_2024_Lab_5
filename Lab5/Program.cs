@@ -22,7 +22,7 @@ public class Program
 
         // code here
         if (k == 0 || k > 0 && k == n) return 1;
-        if (k<0 || n<0) return 0;
+        if (k < 0 || n < 0) return 0;
         answer = Combinations(n, k);
         // create and use Combinations(n, k);
         // create and use Factorial(n);
@@ -33,7 +33,7 @@ public class Program
     }
     int Factorial(int n)
     {
-        int res = 1, a=1;
+        int res = 1, a = 1;
         while (a <= n)
         {
             res *= a;
@@ -41,7 +41,7 @@ public class Program
         }
         return res;
     }
-    long Combinations (int n, int k)
+    long Combinations(int n, int k)
     {
         long res = Factorial(n) / Factorial(k) / Factorial(n - k);
         return res;
@@ -59,7 +59,7 @@ public class Program
         else if (s1 > s2) answer = 1;
         else answer = 2;
         {
-            
+
         }
         // create and use GeronArea(a, b, c);
 
@@ -97,7 +97,7 @@ public class Program
     }
     double GetDistance(double v, double a, int t)
     {
-        
+
         double s = v * t + a * t * t / 2;
         return s;
     }
@@ -107,7 +107,7 @@ public class Program
         int answer = 0;
 
         // code here
-        if (a1 == a2 || v1 == v2|| v2>v1) return 1;
+        if (a1 == a2 || v1 == v2 || v2 > v1) return 1;
         double ans = (2 * (v2 - v1) / (a1 - a2));
         answer = (int)Math.Ceiling(ans);
         //Console.WriteLine($"{v1}   {a1}       {v2}  {a2}    {answer}");
@@ -136,6 +136,8 @@ public class Program
         int maxiB = FindMaxIndex(B);
         if (maxiA < maxiB)
         {
+            Change(A, maxiA);
+            /*
             double sr = 0, c = 0, maxA = A[maxiA];
             for (int i = maxiA + 1; i < A.Length; i++)
             {
@@ -146,10 +148,12 @@ public class Program
             for (int i = 0; i < A.Length; i++)
             {
                 if (A[i] == maxA) A[i] = sr;
-            }
+            }*/
         }
         else
         {
+            Change(B, maxiB);
+            /*
             double sr = 0, c = 0, maxB = B[maxiB];
             for (int i = maxiB + 1; i < B.Length; i++)
             {
@@ -160,13 +164,27 @@ public class Program
             for (int i = 0; i < B.Length; i++)
             {
                 if (B[i] == maxB) B[i] = sr;
-            }
+            }*/
         }
 
         // create and use FindMaxIndex(array);
         // only 1 array has to be changed!
 
         // end
+    }
+    void Change(double[] array, int maxind)
+    {
+        double sr = 0, c = 0, maxA = array[maxind];
+        for (int i = maxind + 1; i < array.Length; i++)
+        {
+            sr += array[i];
+            c++;
+        }
+        sr /= c;
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (array[i] == maxA) array[i] = sr;
+        }
     }
     int FindMaxIndex(double[] array)
     {
@@ -545,6 +563,9 @@ public class Program
     public void Task_2_20(ref int[,] A, ref int[,] B)
     {
         // code here
+        Delete(ref A);
+        Delete(ref B);
+        /*
         for (int j = A.GetLength(1)-1; j>=0; j--)
         {
             int count = 0;
@@ -570,11 +591,27 @@ public class Program
                 }
             }
             if (count == 0) B = RemoveColumn(B, j);
-        }
+        }*/
 
         // use RemoveColumn(matrix, columnIndex); from 2_10
 
         // end
+    }
+    void Delete(ref int[,] matrix)
+    {
+        for (int j = matrix.GetLength(1) - 1; j >= 0; j--)
+        {
+            int count = 0;
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                if (matrix[i, j] == 0)
+                {
+                    count++;
+                    break;
+                }
+            }
+            if (count == 0) matrix = RemoveColumn(matrix, j);
+        }
     }
 
     public void Task_2_21(int[,] A, int[,] B, out int[] answerA, out int[] answerB)
@@ -762,7 +799,8 @@ public class Program
     public void Task_2_28b(int[] first, int[] second, ref int[,] answerFirst, ref int[,] answerSecond)
     {
         // code here
-        int countfirst = 0;
+        int countfirst = CountSequence(first);
+        /*
         for (int i = 0; i<first.Length; i++)
         {
             for (int j = i+1; j<first.Length; j++)
@@ -773,8 +811,10 @@ public class Program
                     countfirst++;
                 }
             }
-        }
+        }*/
         answerFirst = new int[countfirst, 2];
+        FindIntervals(first, answerFirst);
+        /*
         for (int i = 0, k=0; i < first.Length; i++)
         {
             for (int j = i + 1; j < first.Length; j++)
@@ -787,19 +827,13 @@ public class Program
                     k++;
                 }
             }
-        }
-        /*
-        for (int i = 0; i<answerFirst.GetLength(0); i++)
-        {
-            for (int j = 0; j<answerFirst.GetLength(1); j++)
-            {
-                Console.Write(answerFirst[i, j]+"  ");
-            }
-            Console.WriteLine();
         }*/
+        
 
-        int countsecond = 0;
-        for (int i = 0; i < second.Length; i++)
+        int countsecond = CountSequence(second);
+        answerSecond = new int[countsecond, 2];
+        FindIntervals(second, answerSecond);
+        /*for (int i = 0; i < second.Length; i++)
         {
             for (int j = i + 1; j < second.Length; j++)
             {
@@ -823,11 +857,43 @@ public class Program
                     k++;
                 }
             }
-        }
+        }*/
         // use FindSequence(array, A, B); from Task_2_28a or entirely Task_2_28a
         // A and B - start and end indexes of elements from array for search
 
         // end
+    }
+    void FindIntervals(int[] array, int[,] answer)
+    {
+        for (int i = 0, k = 0; i < array.Length; i++)
+        {
+            for (int j = i + 1; j < array.Length; j++)
+            {
+                int res = FindSequence(array, i, j);
+                if (res == 1 || res == -1)
+                {
+                    answer[k, 0] = i;
+                    answer[k, 1] = j;
+                    k++;
+                }
+            }
+        }
+    }
+    int CountSequence(int[] array)
+    {
+        int count = 0;
+        for (int i = 0; i < array.Length; i++)
+        {
+            for (int j = i + 1; j < array.Length; j++)
+            {
+                int res = FindSequence(array, i, j);
+                if (res == 1 || res == -1)
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     public void Task_2_28c(int[] first, int[] second, ref int[] answerFirst, ref int[] answerSecond)
@@ -838,6 +904,11 @@ public class Program
         Task_2_28b(first, second, ref res1, ref res2);
         answerFirst = new int[2];
         answerSecond = new int[2];
+        FindBiggestInterval(res1, ref answerFirst);
+        FindBiggestInterval(res2, ref answerSecond);
+
+        /*
+        
         int maxint1 = 0;
         for (int i = 0; i<res1.GetLength(0); i++)
         {
@@ -858,11 +929,26 @@ public class Program
                 answerSecond[0] = res2[i, 0];
                 answerSecond[1] = res2[i, 1];
             }
-        }
+        }*/
+
         // use FindSequence(array, A, B); from Task_2_28a or entirely Task_2_28a or Task_2_28b
         // A and B - start and end indexes of elements from array for search
 
         // end
+    }
+    void FindBiggestInterval(int[,] intervals, ref int[] answer)
+    {
+        answer= new int[2];
+        int maxint = 0;
+        for (int i = 0; i < intervals.GetLength(0); i++)
+        {
+            if (intervals[i, 1] - intervals[i, 0] > maxint)
+            {
+                maxint =intervals[i, 1] -intervals[i, 0];
+                answer[0] = intervals[i, 0];
+                answer[1] = intervals[i, 1];
+            }
+        }
     }
     #endregion
 
